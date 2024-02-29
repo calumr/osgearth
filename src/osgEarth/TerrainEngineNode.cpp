@@ -354,7 +354,11 @@ TerrainEngineNode::create(const TerrainOptions& options )
         driver = Registry::instance()->getDefaultTerrainEngineDriverName();
 
     std::string driverExt = std::string( ".osgearth_engine_" ) + driver;
-    osg::ref_ptr<osg::Object> object = osgDB::readRefObjectFile( driverExt );
+
+    auto cacheOptions = new osgDB::Options;
+    cacheOptions->setObjectCacheHint(osgDB::Options::CACHE_NONE);
+
+    osg::ref_ptr<osg::Object> object = osgDB::readRefObjectFile( driverExt, cacheOptions );
     node = dynamic_cast<TerrainEngineNode*>( object.release() );
     if ( !node )
     {
